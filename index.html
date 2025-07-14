@@ -1,1 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malla Interactiva Auditoría</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <h1>Malla Interactiva Auditoría</h1>
+  <div class="malla">
+    <!-- Ejemplo: Álgebra -->
+    <div class="ramo" id="ramo-1" data-abre="4,5">
+      <p><strong>Álgebra</strong></p>
+      <button onclick="aprobarRamo(1)">Aprobar el ramo</button>
+    </div>
 
+    <!-- Ejemplo: Cálculo -->
+    <div class="ramo bloqueado" id="ramo-4">
+      <p><strong>Cálculo</strong></p>
+      <button disabled>Aún bloqueado</button>
+    </div>
+
+    <!-- Ejemplo: Matemáticas Financieras -->
+    <div class="ramo bloqueado" id="ramo-5">
+      <p><strong>Matemáticas Financieras</strong></p>
+      <button disabled>Aún bloqueado</button>
+    </div>
+
+    <!-- Puedes seguir agregando más ramos con su ID y data-abre correspondiente -->
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
