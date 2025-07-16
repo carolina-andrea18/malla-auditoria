@@ -65,4 +65,73 @@ const ramos = [
 ];
 
 // ... (continuará con lógica de crearRamos, aprobarRamo, reiniciarMalla, etc.)
+// script.js
+
+const ramos = [
+  // ... (ramos definidos previamente, como ya los tienes cargados)
+];
+
+let estado = {};
+
+function cargarEstado() {
+  const guardado = localStorage.getItem("estadoMalla");
+  if (guardado) estado = JSON.parse(guardado);
+}
+
+function guardarEstado() {
+  localStorage.setItem("estadoMalla", JSON.stringify(estado));
+}
+
+function crearRamos() {
+  const malla = document.getElementById("malla");
+  malla.innerHTML = "";
+  let aprobados = 0;
+
+  ramos.forEach((ramo) => {
+    if (!estado[ramo.id]) estado[ramo.id] = "bloqueado";
+
+    const requisitos = ramo.req || [];
+    const desbloqueado = requisitos.every((req) => estado[req] === "aprobado") || requisitos.length === 0;
+
+    if (estado[ramo.id] !== "aprobado" && desbloqueado) estado[ramo.id] = "desbloqueado";
+
+    if (estado[ramo.id] === "aprobado") aprobados++;
+
+    const div = document.createElement("div");
+    div.className = `ramo ${estado[ramo.id]}`;
+    div.innerText = ramo.nombre;
+    div.setAttribute("data-tooltip", requisitos.length ? "Requiere: " + requisitos.map(id => ramos.find(r => r.id === id).nombre).join(", ") : "Sin requisitos");
+    div.onclick = () => aprobarRamo(ramo.id);
+    malla.appendChild(div);
+  });
+
+  document.getElementById("contador").innerText = `${aprobados} / ${ramos.length} ramos aprobados`;
+  guardarEstado();
+}
+
+function aprobarRamo(id) {
+  if (estado[id] !== "desbloqueado") return;
+  estado[id] = "aprobado";
+
+  ramos.forEach((ramo) => {
+    if ((ramo.req || []).includes(id)) {
+      const requisitos = ramo.req || [];
+      const desbloqueado = requisitos.every((req) => estado[req] === "aprobado");
+      if (desbloqueado && estado[ramo.id] !== "aprobado") estado[ramo.id] = "desbloqueado";
+    }
+  });
+
+  crearRamos();
+}
+
+function reiniciarMalla() {
+  if (confirm("¿Estás segura que quieres reiniciar la malla?")) {
+    localStorage.removeItem("estadoMalla");
+    estado = {};
+    crearRamos();
+  }
+}
+
+cargarEstado();
+crearRamos();
 
